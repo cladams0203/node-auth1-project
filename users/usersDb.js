@@ -2,7 +2,8 @@ const users = require('../data/dbConfig')
 
 module.exports = {
     find,
-    insert
+    insert,
+    findByUsername
 }
 
 function find() {
@@ -13,5 +14,8 @@ function insert(user) {
     return users('users')
         .insert(user)
        
+}
+function findByUsername(username) {
+    return users('users').where({ username }).first()
 }
 
