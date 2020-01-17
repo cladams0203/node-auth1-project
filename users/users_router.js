@@ -28,6 +28,7 @@ router.post('/login', (req,res) => {
         .findByUsername(username)
         .then(user => {
             if(user && bcrypt.compareSync(password, user.password)) {
+                req.session.user = user
                 res.status(200).json({message: 'logged in'}) 
             }else {
                 res.status(401).json({message: 'unauthorized'})
@@ -41,21 +42,12 @@ router.post('/login', (req,res) => {
 })
 
 function validateToken(req,res,next) {
-    const { username, password } = req.headers
-    users
-        .findByUsername(username)
-        .then(user => {
-            if(user && bcrypt.compareSync(password, user.password)) {
-                next()
-            }else {
-                res.status(403).json({message: 'unauthorized'})
-            }
-            
-        })
-        .catch(err => {
-            console.log(err)
-            res.status(500).json({message: 'failed to register a new user'})
-        })
+    if (req.session && req.session.user) {
+        next()
+    }else {
+        res.status(401).json({message: 'unauthorized'})
+    }
+    
 }
 
 module.exports = router
