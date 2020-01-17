@@ -8,7 +8,7 @@ const db = require('./data/dbConfig')
 
 const sessionConfig = {
     secret: process.env.SESSION_SECRET || 'test secret',
-    name: '',
+    name: 'pepperidge_farms',
     cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         secure: process.env.NODE_ENV === "production" ? true : false,
@@ -28,7 +28,10 @@ const sessionConfig = {
 const server = express()
 
 server.use(express.json())
-server.use(cors())
+server.use(cors( {
+    credentials: true,
+    origin: 'http://localhost:3000'
+}))
 server.use(session(sessionConfig))
 
 
